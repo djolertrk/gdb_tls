@@ -21,6 +21,7 @@
 #include "elf/common.h"
 #include "elf/internal.h"
 #include "elf/mips.h"
+#include <stdarg.h>
 
 extern bfd_boolean _bfd_mips_elf_mkobject
   (bfd *);
