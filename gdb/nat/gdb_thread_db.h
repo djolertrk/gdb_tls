@@ -28,12 +28,18 @@
 #define LIBTHREAD_DB_SO "libthread_db.so.1"
 #endif
 
+#ifndef LD_SO
+#define LD_SO "ld.so.1"
+#endif
+
 #ifndef LIBTHREAD_DB_SEARCH_PATH
 /* $sdir appears before $pdir for some minimal security protection:
    we trust the system libthread_db.so a bit more than some random
    libthread_db associated with whatever libpthread the app is using.  */
 #define LIBTHREAD_DB_SEARCH_PATH "$sdir:$pdir"
 #endif
+
+char versbuf[5];
 
 /* Types of the libthread_db functions.  */
 
@@ -71,5 +77,16 @@ typedef td_err_e (td_thr_tlsbase_ftype) (const td_thrhandle_t *th,
 
 typedef const char ** (td_symbol_list_ftype) (void);
 typedef td_err_e (td_ta_delete_ftype) (td_thragent_t *);
+
+
+extern td_err_e gdb_td_ta_new (struct ps_prochandle *__ps, td_thragent_t **__ta);
+
+extern td_err_e gdb_td_thr_tlsbase (const td_thrhandle_t *th,
+		unsigned long int modid,
+		psaddr_t *base);
+extern td_err_e gdb_td_thr_tls_get_addr (const td_thrhandle_t *th,
+         psaddr_t map_address, size_t offset, psaddr_t *address);
+
+extern int native_check(unsigned bfd_arch);
 
 #endif /* GDB_THREAD_DB_H */

@@ -727,6 +727,10 @@ ALL_TARGET_OBS = \
 @host_makefile_frag@
 # End of host-dependent makefile fragment
 
+# Cross fragment
+@cross_makefile_frag@
+# End of cross fragment
+
 FLAGS_TO_PASS = \
 	"prefix=$(prefix)" \
 	"exec_prefix=$(exec_prefix)" \
@@ -1008,7 +1012,7 @@ INFOFILES = gdb.info*
 # Makefile.in
 
 DEPFILES = $(TARGET_OBS) $(SER_HARDWIRE) $(NATDEPFILES) \
-	   $(REMOTE_OBS) $(SIM_OBS)
+	   $(REMOTE_OBS) $(SIM_OBS) $(GLIBCFILES)
 
 SOURCES = $(SFILES) $(ALLDEPFILES) $(YYFILES) $(CONFIG_SRCS)
 # Don't include YYFILES (*.c) because we already include *.y in SFILES,
@@ -2320,6 +2324,40 @@ arm-linux.o: ${srcdir}/arch/arm-linux.c
 arm-get-next-pcs.o: ${srcdir}/arch/arm-get-next-pcs.c
 	$(COMPILE) $(srcdir)/arch/arm-get-next-pcs.c
 	$(POSTCOMPILE)
+
+# gdb/glibc-dep/ dependencies
+#
+# Need to explicitly specify the compile rule as make will do nothing
+# or try to compile the object file into the sub-directory.
+
+td_ta_map_lwp2thr.o: $(srcdir)/glibc-dep/nptl_db/td_ta_map_lwp2thr.c
+	$(COMPILE) $(srcdir)/glibc-dep/nptl_db/td_ta_map_lwp2thr.c
+	$(POSTCOMPILE)
+
+td_symbol_list.o: $(srcdir)/glibc-dep/nptl_db/td_symbol_list.c
+	$(COMPILE) $(srcdir)/glibc-dep/nptl_db/td_symbol_list.c
+	$(POSTCOMPILE)
+
+fetch-value.o: $(srcdir)/glibc-dep/nptl_db/fetch-value.c
+	$(COMPILE) $(srcdir)/glibc-dep/nptl_db/fetch-value.c
+	$(POSTCOMPILE)
+
+gdb_td_ta_new.o: $(srcdir)/glibc-dep/gdb_td_ta_new.c
+	$(COMPILE) $(srcdir)/glibc-dep/gdb_td_ta_new.c
+	$(POSTCOMPILE)
+
+native_check.o: $(srcdir)/glibc-dep/native_check.c
+	$(COMPILE) $(srcdir)/glibc-dep/native_check.c
+	$(POSTCOMPILE)
+
+td_thr_tlsbase.o: $(srcdir)/glibc-dep/nptl_db/td_thr_tlsbase.c
+	$(COMPILE) $(srcdir)/glibc-dep/nptl_db/td_thr_tlsbase.c
+	$(POSTCOMPILE)
+
+td_thr_tls_get_addr.o: $(srcdir)/glibc-dep/nptl_db/td_thr_tls_get_addr.c
+	$(COMPILE) $(srcdir)/glibc-dep/nptl_db/td_thr_tls_get_addr.c
+	$(POSTCOMPILE)
+
 
 # gdb/nat/ dependencies
 #

@@ -45,6 +45,7 @@
 #include <signal.h>
 #include <ctype.h>
 #include "nat/linux-namespaces.h"
+#include "../bfd/bfd.h"
 
 /* GNU/Linux libthread_db support.
 
@@ -535,6 +536,17 @@ try_thread_db_load_1 (struct thread_db_info *info)
   info->proc_handle.ptid = inferior_ptid;
 
   /* Now attempt to open a connection to the thread library.  */
+#ifdef CROSS_GDB
+  struct bfd_arch_info *bfdarch = gdbarch_bfd_arch_info (target_gdbarch ());
+  unsigned arch = bfdarch->arch;
+
+  //if it's host we want to keep old way of counting tls address
+  if(native_check(arch) != 0){
+   /* gdb_td_ta_new has similar behavior as td_ta_new, so if any
+      occurs same error will be catched in td_ta_new */
+   gdb_td_ta_new (&info->proc_handle, &info->thread_agent);
+  }
+#endif
   err = info->td_ta_new_p (&info->proc_handle, &info->thread_agent);
   if (err != TD_OK)
     {
@@ -563,8 +575,19 @@ try_thread_db_load_1 (struct thread_db_info *info)
   CHK (TDB_VERBOSE_DLSYM (info, td_thr_get_info));
 
   /* These are not essential.  */
+#ifdef CROSS_GDB
+  if(native_check(arch) != 0){
+    info->td_thr_tls_get_addr_p=gdb_td_thr_tls_get_addr;
+    info->td_thr_tlsbase_p=gdb_td_thr_tlsbase;
+  }else{
+    //if it's host we want to keep old way of counting tls address
+    TDB_DLSYM (info, td_thr_tls_get_addr);
+    TDB_DLSYM (info, td_thr_tlsbase);
+  }
+#else
   TDB_DLSYM (info, td_thr_tls_get_addr);
   TDB_DLSYM (info, td_thr_tlsbase);
+#endif
 
   /* It's best to avoid td_ta_thr_iter if possible.  That walks data
      structures in the inferior's address space that may be corrupted,

@@ -1,0 +1,6 @@
+# GLIBC fragment comes in here
+GLIBCFILES = td_symbol_list.o \
+	fetch-value.o gdb_td_ta_new.o \
+	td_thr_tlsbase.o td_thr_tls_get_addr.o \
+	td_ta_map_lwp2thr.o native_check.o
+INTERNAL_CFLAGS += -DCROSS_GDB

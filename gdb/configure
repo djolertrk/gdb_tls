@@ -804,6 +804,7 @@ PACKAGE_NAME
 PATH_SEPARATOR
 SHELL'
 ac_subst_files='host_makefile_frag'
+ac_subst_files2='cross_makefile_frag'
 ac_user_opts='
 enable_option_checking
 enable_maintainer_mode
@@ -2574,12 +2575,41 @@ _ASBOX
 
     if test -n "$ac_subst_files"; then
       cat <<\_ASBOX
+_ASBOX
+    echo
+    for ac_var in $ac_subst_vars
+    do
+      eval ac_val=\$$ac_var
+      case $ac_val in
+      *\'\''*) ac_val=`$as_echo "$ac_val" | sed "s/'\''/'\''\\\\\\\\'\'''\''/g"`;;
+      esac
+      $as_echo "$ac_var='\''$ac_val'\''"
+    done | sort
+    echo
+
+    if test -n "$ac_subst_files2"; then
+      cat <<\_ASBOX
 ## ------------------- ##
 ## File substitutions. ##
 ## ------------------- ##
 _ASBOX
       echo
       for ac_var in $ac_subst_files
+      do
+	eval ac_val=\$$ac_var
+	case $ac_val in
+	*\'\''*) ac_val=`$as_echo "$ac_val" | sed "s/'\''/'\''\\\\\\\\'\'''\''/g"`;;
+	esac
+	$as_echo "$ac_var='\''$ac_val'\''"
+      done | sort
+      echo
+    fi
+
+    if test -s confdefs.h; then
+      cat <<\_ASBOX
+_ASBOX
+      echo
+      for ac_var in $ac_subst_files2
       do
 	eval ac_val=\$$ac_var
 	case $ac_val in
@@ -15901,7 +15931,6 @@ fi
 
 
 
-
 if test "${gdb_native}" = "yes"; then
 # We pick this up from the host configuration file (.mh) because we
 # do not have a native configuration Makefile fragment.
@@ -15910,6 +15939,11 @@ s/NAT_FILE[ 	]*=[ 	]*\([^ 	]*\)/\1/p
 ' ${host_makefile_frag}`
 fi
 
+if test "${gdb_native}" = "no" || test "${enable_targets}" != ""; then
+  cross_makefile_frag=${srcdir}/config/glibc.mh
+else
+  cross_makefile_frag=/dev/null
+fi
 
 if test x"${gdb_osabi}" != x ; then
 
@@ -17403,6 +17437,7 @@ _ACEOF
   echo "cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1" &&
   echo 'cat >>"\$tmp/subs1.awk" <<\\_ACAWK &&' &&
   echo "$ac_subst_files" | sed 's/.*/F["&"]="$&"/' &&
+  echo "$ac_subst_files2" | sed 's/.*/F["&"]="$&"/' &&
   echo "_ACAWK" &&
   echo "_ACEOF"
 } >conf$$files.sh &&

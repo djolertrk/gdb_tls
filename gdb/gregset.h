@@ -24,11 +24,11 @@
 #endif
 
 #ifndef GDB_GREGSET_T
-#define GDB_GREGSET_T gregset_t
+#define GDB_GREGSET_T elf_gregset_t
 #endif
 
 #ifndef GDB_FPREGSET_T
-#define GDB_FPREGSET_T fpregset_t
+#define GDB_FPREGSET_T elf_fpregset_t
 #endif
 
 typedef GDB_GREGSET_T gdb_gregset_t;

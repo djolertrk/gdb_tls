@@ -62,7 +62,7 @@ EXTERN_C_POP
 #include <sys/procfs.h>
 #endif
 
-EXTERN_C_PUSH
+//EXTERN_C_PUSH
 
 /* Functions in this interface return one of these status codes.  */
 typedef enum
@@ -159,7 +159,7 @@ extern ps_err_e ps_lsetxregs (struct ps_prochandle *ph, lwpid_t lwpid,
 /* Log a message (sends to gdb_stderr).  */
 extern void ps_plog (const char *fmt, ...);
 
-EXTERN_C_POP
+//EXTERN_C_POP
 
 #endif /* HAVE_PROC_SERVICE_H */
 
