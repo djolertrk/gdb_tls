@@ -40,7 +40,7 @@ a core file generated on a target machine.)
 	(gdb) p/x foo
 	Cannot find user-level thread for LWP 21808: generic error
 
--after pathing:
+-after patching:
 
 	(gdb) p/x foo
 	$1 = 0xdeadbeef
